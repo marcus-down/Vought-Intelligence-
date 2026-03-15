@@ -27,7 +27,8 @@ export const botConfig = {
         // Text users will see (example: "Playing /help | Titan Bot").
         name: "When they're apart, they're absolute fing rubbish. But, you put them together, they're the goddamn fing Spice Girls",
         // Activity type number (0 = Playing).
-        type: 3, 
+        type: 1, // 1 = Streaming
+    url: "https://youtu.be/XNQbH1SDPRk?si=u8ZqWvxlOlcJCCsR"
       },
     ],
   },
