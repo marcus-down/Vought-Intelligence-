@@ -1,255 +1,300 @@
-# 🤖 TitanBot - Ultimate Discord Bot
+# 🧠 Vought Intelligence
 
-**TitanBot** is a powerful, feature-rich Discord bot designed to enhance your server experience with comprehensive moderation tools, engaging economy systems, utility features, and much more. Built with modern Discord.js v14 and PostgreSQL for optimal performance and data persistence.
+**Vought Intelligence** is an advanced artificial intelligence platform designed to manage, protect, and enhance Discord communities. Developed with high-performance infrastructure using Discord.js v14 and PostgreSQL, it delivers powerful moderation systems, automated community tools, and scalable engagement features.
 
-
-## 📚 Table of Contents
-
-- [🌟 Features Overview](#features-overview)
-- [🚀 Quick Setup](#quick-setup)
-- [⚙️ Manual Installation Steps](#manual-installation-steps)
-- [🗄️ Database System](#database-system)
-- [🏗️ Bot Architecture](#bot-architecture)
-- [🤝 Contributing](#contributing)
-
-<a name="features-overview"></a>
-## 🌟 Features Overview
-
-TitanBot offers a complete suite of tools for Discord server management and community engagement:
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### 🛡️ Moderation & Administration
-- **Mass Actions** - Bulk ban/kick capabilities
-- **User Notes** - Keep detailed moderation records
-- **Case Management** - View and track all mod actions
-
-### 💰 Economy System
-- **Shop & Inventory** - Buy and manage items
-- **Gambling** - Risk it for rewards
-- **Pay System** - Transfer money between users
-
-### 🎮 Fun & Entertainment
-- **Random Facts** - Learn something new
-- **Wanted Poster** - Create fun wanted images
-- **Text Reversal** - Reverse any text
-
-### 🎫 Advanced Ticket System
-- **Claim & Priority** - Staff ticket management
-- **Ticket Limits** - Prevent spam
-- **Transcript System** - Save ticket history
-
-### 🔢 Server Counters
-- **Member Counter** - Live member count channels
-- **Voice Counters** - Track voice stats
-- **Dynamic Updates** - Real-time channel updates
-
-### 🎭 Reaction Roles
-- **Role Assignment** - Self-assignable roles
-- **Emoji Selection** - Reaction-based system
-- **Multi-role Support** - Multiple role options
-
-</td>
-<td width="50%" valign="top">
-
-### 📊 Leveling & XP System
-- **XP Tracking** - Automatic message-based XP
-- **Level Roles** - Auto-assign roles by level
-- **Custom Configuration** - Personalize leveling
-
-### 🎉 Giveaways & Events
-- **Multiple Winners** - Support multi-winner giveaways
-- **Auto Picking** - Automatic winner selection
-- **Reroll System** - Pick new winners if needed
-
-### 🎂 Birthday System
-- **Birthday Tracking** - Never miss a birthday
-- **Auto Announcements** - Celebrate automatically
-- **Timezone Support** - Accurate worldwide tracking
-
-### 🔧 Utility Tools
-- **Report System** - Report issues to staff
-- **Todo Lists** - Personal task management
-- **First Message** - Jump to channel's first message
-
-### 👋 Welcome System
-- **Welcome Messages** - Greet new members
-- **Auto Roles** - Assign roles on join
-- **Custom Embeds** - Personalized messages
-
-</td>
-</tr>
-</table>
-
-<a name="quick-setup"></a>
-
-## 🚀 Quick Setup (recommend)
-
-### 📹 Video Tutorial
-For a detailed step-by-step setup guide, watch our comprehensive video tutorial:
-[**TitanBot Setup Tutorial**](https://www.youtube.com/@TouchDisc)
-<a name="manual-installation-steps"></a>
-## ⚙️ Manual Installation Steps
-
-### Prerequisites
-- Node.js 18.0.0 or higher
-- PostgreSQL server (recommended) or memory storage fallback
-- Discord bot application with proper intents
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/TitanBot.git
-   cd TitanBot
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables**
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` with your configuration (only the following variables require configuration, leave remaining variables as default):
-   ```env
-   # Discord Bot Configuration
-   DISCORD_TOKEN=your_discord_bot_token_here
-   CLIENT_ID=your_discord_client_id_here
-   GUILD_ID=your_discord_guild_id_here
-
-   # PostgreSQL Configuration (Primary Database)
-   POSTGRES_URL=postgresql://postgres:yourpassword@localhost:5432/titanbot
-   POSTGRES_HOST=localhost
-   POSTGRES_PORT=5432
-   POSTGRES_DB=titanbot
-   POSTGRES_USER=postgres
-   POSTGRES_PASSWORD=yourpassword
-   ```
-
-   Production note:
-   - `NODE_ENV=production`
-   - `LOG_LEVEL=warn` for a clean production console (critical issues + startup status)
-   - `LOG_LEVEL=info` if you want more detailed operational logs
-   - If your chosen `PORT` is already used, TitanBot automatically tries the next port(s)
-
-   Environment options reference:
-   - `NODE_ENV`: `development`, `production`, `test` (any non-`production` value is treated as non-production)
-   - `LOG_LEVEL`: `error`, `warn`, `info`, `http`, `verbose`, `debug`, `silly`
-   - Accepted aliases for `LOG_LEVEL` in this bot: `warns`, `warning`, `warnings` → `warn`
-
-   Recommended production `.env` (easy mode + default mode):
-   ```env
-   NODE_ENV=production
-   LOG_LEVEL=warn
-   WEB_HOST=0.0.0.0
-   PORT=3000
-   PORT_RETRY_ATTEMPTS=5
-   ```
-   This gives clear startup/online status messages while keeping logs simple for non-technical operators.
-   If port `3000` is busy, the bot tries the next available ports automatically (up to `PORT_RETRY_ATTEMPTS`).
-
-4. **Setup PostgreSQL Database** (Optional but recommended)
-   ```bash
-   # Create database and user
-   createdb titanbot
-   createuser titanbot
-   psql -c "ALTER USER titanbot PASSWORD 'yourpassword';"
-   psql -c "GRANT ALL PRIVILEGES ON DATABASE titanbot TO titanbot;"
-   ```
-
-5. **Test Database Connection**
-   ```bash
-   npm run test-postgres
-   ```
-
-6. **Start the Bot**
-   ```bash
-   npm start
-   ```
-
-### Migration Version Guard
-- `npm run migrate` applies schema setup and records the expected schema version.
-- `npm run migrate:check` fails if the database schema version does not match the code's expected version.
-- `npm run migrate:status` prints current vs expected schema version metadata.
-<a name="database-system"></a>
-## 🗄️ Database System
-
-TitanBot uses **PostgreSQL** as its primary database with intelligent fallback to memory storage:
-
-### PostgreSQL Features
-- **ACID Compliance**: Reliable transactions and data integrity
-- **High Performance**: Optimized queries and connection pooling
-- **Persistence**: Data survives bot restarts and crashes
-- **Complex Queries**: Advanced data analysis capabilities
-- **Scalability**: Better performance for large datasets
-- **TTL Support**: Automatic key expiration for temporary data
-- **Connection Management**: Automatic reconnection with exponential backoff
-- **Automatic Schema Creation**: Tables and indexes created on connection
-
-### Fallback System
-- **Memory Storage**: Automatic fallback when PostgreSQL is unavailable
-- **Graceful Degradation**: Bot continues functioning without database
-- **Backward Compatibility**: Maintains existing API structure
-- **Zero Downtime**: Seamless switching between database and memory
-<a name="bot-architecture"></a>
-## 🏗️ Bot Architecture
-
-### Technology Stack
-- **Discord.js v14** - Modern Discord API wrapper
-- **Node.js 18+** - JavaScript runtime environment
-- **PostgreSQL** - High-performance relational database
-- **Express.js** - Web server for health checks
-- **Winston** - Advanced logging system
-- **Node-cron** - Scheduled task management
-
-### Bot Intents
-TitanBot requires the following Discord intents:
-- Bot
-- Applications.commands
-
-### Required Permissions
-- **View Channels**
-- **Send Messages**
-- **Embed Links**
-- **Attach Files**
-- **Read Message History**
-- **Manage Messages**
-- **Manage Channels**
-- **Manage Roles**
-- **Kick Members**
-- **Ban Members**
-- **Moderate Members**
-- **Connect**
-<a name="contributing"></a>
-## 🤝 Contributing
-
-We welcome contributions to TitanBot! Here's how you can help:
-
-1. **Fork the repository**
-2. **Create a feature branch**
-3. **Make your changes**
-4. **Test thoroughly**
-5. **Submit a pull request**
-
-### Development Guidelines
-- Follow existing code style
-- Add proper error handling
-- Include documentation for new features
-- Test with PostgreSQL and memory storage
-
-## 📜 License
-
-TitanBot is released under the MIT License. See [LICENSE](LICENSE) for details.
-
-## 💌 Thank You
-
-Thank you for choosing TitanBot for your Discord server! We're constantly working to improve and add new features based on community feedback.
-
-**Made with ❤️**
+Engineered with the precision expected from Vought International, this system provides a unified digital intelligence capable of maintaining order, improving interaction, and supporting large-scale Discord environments.
 
 ---
 
-*Last updated: March 2026*
+# 📚 Table of Contents
+
+- Features Overview
+- Quick Setup
+- Manual Installation
+- Database System
+- Architecture
+- Contributing
+
+---
+
+# 🌟 Core Systems
+
+Vought Intelligence integrates multiple operational systems into a single intelligent framework designed for community stability and growth.
+
+## 🛡 Governance & Moderation
+
+Maintain order and enforce server policies through intelligent moderation tools.
+
+- Mass ban and kick capabilities  
+- Moderation case tracking  
+- Persistent user notes  
+- Administrative action history  
+
+## 💰 Economy Infrastructure
+
+Create engaging community economies with automated systems.
+
+- Server shop and inventory system  
+- Gambling mechanics  
+- Peer-to-peer currency transfers  
+- User balance tracking  
+
+## 🎮 Engagement Systems
+
+Increase user interaction with entertainment utilities.
+
+- Random fact generator  
+- Wanted poster image creator  
+- Text transformation tools  
+
+## 🎫 Support Ticket Network
+
+Advanced ticket management designed for staff workflows.
+
+- Ticket claiming system  
+- Priority management  
+- Transcript storage  
+- Ticket spam prevention  
+
+## 🔢 Server Intelligence Counters
+
+Real-time server statistics displayed dynamically.
+
+- Member counters  
+- Bot counters  
+- Voice activity tracking  
+- Automatic updates  
+
+## 🎭 Reaction Role System
+
+Allow users to configure their own roles through interaction.
+
+- Emoji-based role assignment  
+- Multi-role support  
+- Self-service role management  
+
+---
+
+# 📊 Experience & Leveling System
+
+Encourage participation through an automated XP system.
+
+- Message-based XP tracking  
+- Automatic level progression  
+- Level reward roles  
+- Fully customizable settings  
+
+---
+
+# 🎉 Event Management
+
+Host large-scale server events with automated systems.
+
+- Multi-winner giveaways  
+- Automatic winner selection  
+- Giveaway reroll tools  
+
+---
+
+# 🎂 Birthday Recognition
+
+Ensure community milestones are celebrated.
+
+- Birthday tracking system  
+- Automatic celebration announcements  
+- Timezone-aware scheduling  
+
+---
+
+# 🔧 Utility Tools
+
+Provide practical features for everyday community use.
+
+- Reporting system for staff review  
+- Personal task management tools  
+- Channel message navigation tools  
+
+---
+
+# 👋 Community Welcome System
+
+Create a structured onboarding experience for new members.
+
+- Automated welcome messages  
+- Auto role assignment  
+- Custom embed messages  
+
+---
+
+# 🚀 Quick Setup
+
+For a full step-by-step guide, follow the setup tutorial:
+
+YouTube Channel: https://www.youtube.com/@TouchDisc
+
+---
+
+# ⚙️ Manual Installation
+
+## Prerequisites
+
+- Node.js 18 or higher
+- PostgreSQL server (recommended)
+- Discord bot application with required intents
+
+---
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/TitanBot.git
+cd TitanBot
+```
+
+---
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3. Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your bot credentials.
+
+```env
+DISCORD_TOKEN=your_discord_bot_token
+CLIENT_ID=your_client_id
+GUILD_ID=your_server_id
+
+POSTGRES_URL=postgresql://postgres:password@localhost:5432/titanbot
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=titanbot
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+```
+
+---
+
+## 4. Setup PostgreSQL Database (Optional but Recommended)
+
+```bash
+createdb titanbot
+createuser titanbot
+psql -c "ALTER USER titanbot PASSWORD 'password';"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE titanbot TO titanbot;"
+```
+
+---
+
+## 5. Test Database Connection
+
+```bash
+npm run test-postgres
+```
+
+---
+
+## 6. Start the Bot
+
+```bash
+npm start
+```
+
+---
+
+# 🗄 Database System
+
+Vought Intelligence uses PostgreSQL as its primary database with an intelligent fallback system.
+
+## PostgreSQL Features
+
+- Reliable transaction support  
+- High performance query handling  
+- Persistent data storage  
+- Scalable infrastructure  
+- Automatic schema generation  
+- Connection pooling  
+
+## Fallback System
+
+If PostgreSQL becomes unavailable, the system automatically switches to memory storage.
+
+- Temporary in-memory data storage  
+- Automatic recovery when database reconnects  
+- Zero downtime operation  
+
+---
+
+# 🏗 Architecture
+
+## Technology Stack
+
+- Discord.js v14  
+- Node.js 18+  
+- PostgreSQL  
+- Express.js  
+- Winston logging system  
+- Node-cron scheduled tasks  
+
+---
+
+# 🔐 Required Bot Permissions
+
+The bot requires the following permissions:
+
+- View Channels  
+- Send Messages  
+- Embed Links  
+- Attach Files  
+- Read Message History  
+- Manage Messages  
+- Manage Channels  
+- Manage Roles  
+- Kick Members  
+- Ban Members  
+- Moderate Members  
+- Connect  
+
+---
+
+# 🤝 Contributing
+
+Contributions help expand the capabilities of Vought Intelligence.
+
+1. Fork the repository  
+2. Create a feature branch  
+3. Implement your changes  
+4. Test thoroughly  
+5. Submit a pull request  
+
+Development guidelines:
+
+- Follow existing code style  
+- Include error handling  
+- Document new features  
+- Test with PostgreSQL and memory storage  
+
+---
+
+# 📜 License
+
+Released under the MIT License.
+
+---
+
+# 💌 Acknowledgment
+
+Thank you for deploying **Vought Intelligence** to power your community infrastructure.
+
+Efficient communities require intelligent systems.
